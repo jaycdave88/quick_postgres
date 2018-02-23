@@ -37,15 +37,15 @@ LIMIT 1000;
 
 ----
 
-SELECT DATE_TRUNC('day', "Payments"."payment_date")::DATE AS "Day of Payment Date",
+SELECT DATE_TRUNC('day', "Payments"."payment_date")::DATE AS "Payment_Date",
        "Users"."user_id" AS "User Id",
        SUM("Payments"."amount") AS "Total sum of Amount"
 FROM "public"."payments" AS "Payments"
 INNER JOIN "public"."subscriptions" AS "Subscriptions" ON "Payments"."subscription_id" = "Subscriptions"."subscription_id"
 INNER JOIN "public"."users" AS "Users" ON "Subscriptions"."user_id" = "Users"."user_id"
-GROUP BY "Day of Payment Date",
+GROUP BY "Payment_Date",
          "User Id"
-ORDER BY "Day of Payment Date" ASC,
+ORDER BY "Payment_Date" ASC,
          "User Id" ASC
 LIMIT 1000;
 
@@ -98,102 +98,31 @@ LIMIT 1000;
 
 ---- No Quotes
 
-----
-
-SELECT Plans.title AS Title,
-       SUM(Plans.cost) AS Total_Cost
-FROM public.plans AS Plans
-GROUP BY Title
-ORDER BY Title ASC
-LIMIT 1000;
+SELECT Plans.title AS Title, SUM(Plans.cost) AS Total_Cost FROM public.plans AS Plans GROUP BY Title ORDER BY Title ASC LIMIT 1000;
 
 ----
 
-SELECT Plans.title AS Title,
-       Users.company AS Company,
-       SUM(Plans.cost) AS Total_Cost
-FROM public.plans AS Plans
-INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.plan_id = Plans.plan_id
-INNER JOIN public.users AS Users ON Subscriptions.user_id = Users.user_id
-GROUP BY Title,
-         Company
-ORDER BY Title ASC,
-         Company ASC
-LIMIT 1000;
+SELECT Plans.title AS Title, Users.company AS Company, SUM(Plans.cost) AS Total_Cost FROM public.plans AS Plans INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.plan_id = Plans.plan_id INNER JOIN public.users AS Users ON Subscriptions.user_id = Users.user_id GROUP BY Title, Company ORDER BY Title ASC, Company ASC LIMIT 1000;
 
 ----
 
-SELECT DATE_TRUNC('day', Users.created_date)::DATE AS Created_Date,
-       Users.company AS Company,
-       SUM(Plans.cost) AS Total_Cost
-FROM public.users AS Users
-INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id
-INNER JOIN public.plans AS Plans ON Subscriptions.plan_id = Plans.plan_id
-GROUP BY Created_Date,
-         Company
-ORDER BY Created_Date ASC,
-         Company ASC
-LIMIT 1000;
+SELECT DATE_TRUNC('day', Users.created_date)::DATE AS Created_Date, Users.company AS Company, SUM(Plans.cost) AS Total_Cost FROM public.users AS Users INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id INNER JOIN public.plans AS Plans ON Subscriptions.plan_id = Plans.plan_id GROUP BY Created_Date, Company ORDER BY Created_Date ASC, Company ASC LIMIT 1000;
 
 ----
 
-SELECT DATE_TRUNC('day', Payments.payment_date)::DATE AS Payment_Date,
-       Users.user_id AS User Id,
-       SUM(Payments.amount) AS Total_Amount
-FROM public.payments AS Payments
-INNER JOIN public.subscriptions AS Subscriptions ON Payments.subscription_id = Subscriptions.subscription_id
-INNER JOIN public.users AS Users ON Subscriptions.user_id = Users.user_id
-GROUP BY Payment_Date,
-         User Id
-ORDER BY Day of Payment Date ASC,
-         User Id ASC
-LIMIT 1000;
+SELECT DATE_TRUNC('day', Payments.payment_date)::DATE AS Payment_Date, Users.user_id AS uid, SUM(Payments.amount) AS Total_Amount FROM public.payments AS Payments INNER JOIN public.subscriptions AS Subscriptions ON Payments.subscription_id = Subscriptions.subscription_id INNER JOIN public.users AS Users ON Subscriptions.user_id = Users.user_id GROUP BY Payment_Date, uid ORDER BY Payment_Date ASC, uid ASC LIMIT 1000;
 
 ----
 
-SELECT Users.company AS Company,
-       Users.campaign_id AS Campaign_Id,
-       SUM(Payments.amount) AS Sum_of_Amount,
-       AVG(Payments.amount) AS Average_of_Amount,
-       MAX(Payments.amount) AS Maximum_Amount,
-       MIN(Payments.amount) AS Minimum_Amount,
-       STDDEV(Payments.amount) AS Standard_Deviation_of_Amount
-FROM public.users AS Users
-INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id
-INNER JOIN public.payments AS Payments ON Payments.subscription_id = Subscriptions.subscription_id
-GROUP BY Company,
-         Campaign_Id
-ORDER BY Company ASC,
-         Campaign_Id ASC
-LIMIT 1000;
+SELECT Users.company AS Company, Users.campaign_id AS Campaign_Id, SUM(Payments.amount) AS Sum_of_Amount, AVG(Payments.amount) AS Average_of_Amount, MAX(Payments.amount) AS Maximum_Amount, MIN(Payments.amount) AS Minimum_Amount, STDDEV(Payments.amount) AS Standard_Deviation_of_Amount FROM public.users AS Users INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id INNER JOIN public.payments AS Payments ON Payments.subscription_id = Subscriptions.subscription_id GROUP BY Company, Campaign_Id ORDER BY Company ASC, Campaign_Id ASC LIMIT 1000;
 
 ----
 
-SELECT Users.company AS Company,
-       Users.zip AS Zip,
-       Users.campaign_id AS Campaign_Id,
-       SUM(Payments.amount) AS Amount
-FROM public.users AS Users
-INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id
-INNER JOIN public.payments AS Payments ON Payments.subscription_id = Subscriptions.subscription_id
-GROUP BY Company,
-         Zip,
-         Campaign_Id
-ORDER BY Company ASC,
-         Zip ASC,
-         Campaign_Id ASC
-LIMIT 1000;
+SELECT Users.company AS Company, Users.zip AS Zip, Users.campaign_id AS Campaign_Id, SUM(Payments.amount) AS Amount FROM public.users AS Users INNER JOIN public.subscriptions AS Subscriptions ON Subscriptions.user_id = Users.user_id INNER JOIN public.payments AS Payments ON Payments.subscription_id = Subscriptions.subscription_id GROUP BY Company, Zip, Campaign_Id ORDER BY Company ASC, Zip ASC, Campaign_Id ASC LIMIT 1000;
 
 ----
 
-SELECT TO_CHAR(Visitors.created_date, 'IYYY-WIW') AS Week_of_Visit,
-       Visitors.campaign_id AS Campaign_Id,
-       COUNT(DISTINCT Visitors.visitor_id) AS Count_of_Vistors
-FROM public.visitors AS Visitors
-GROUP BY Week_of_Visit,
-         Campaign_Id
-ORDER BY Week_of_Visit ASC,
-         Campaign_Id ASC
-LIMIT 1000;
+SELECT TO_CHAR(Visitors.created_date, 'IYYY-WIW') AS Week_of_Visit, Visitors.campaign_id AS Campaign_Id, COUNT(DISTINCT Visitors.visitor_id) AS Count_of_Vistors FROM public.visitors AS Visitors GROUP BY Week_of_Visit, Campaign_Id ORDER BY Week_of_Visit ASC, Campaign_Id ASC LIMIT 1000;
+
 
 ----
