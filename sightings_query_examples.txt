@@ -1,0 +1,88 @@
+SELECT "States"."name" AS "State",
+       "Counties"."name" AS "County",
+       "Sightings"."shape" AS "Shape",
+       COUNT(DISTINCT "Sightings"."id") AS "Count"
+FROM "public"."states" AS "States"
+INNER JOIN "public"."counties" AS "Counties" ON "Counties"."state_id" = "States"."id"
+INNER JOIN "public"."cities" AS "Cities" ON "Cities"."state_id" = "States"."id"
+INNER JOIN "public"."sightings" AS "Sightings" ON "Sightings"."city_id" = "Cities"."id"
+GROUP BY "State",
+         "County",
+         "Shape"
+ORDER BY "State" ASC,
+         "County" ASC,
+         "Shape" ASC
+LIMIT 1000;
+
+----
+
+SELECT "States"."name" AS "State",
+       AVG("Sightings"."duration") AS "Average Duration"
+FROM "public"."states" AS "States"
+INNER JOIN "public"."cities" AS "Cities" ON "Cities"."state_id" = "States"."id"
+INNER JOIN "public"."sightings" AS "Sightings" ON "Sightings"."city_id" = "Cities"."id"
+GROUP BY "State"
+ORDER BY "State" ASC
+LIMIT 1000;
+
+----
+
+SELECT "States"."name" AS "State",
+       "Cities"."name" AS "City",
+       AVG("Sightings"."duration") AS "Average Duration"
+FROM "public"."states" AS "States"
+INNER JOIN "public"."cities" AS "Cities" ON "Cities"."state_id" = "States"."id"
+INNER JOIN "public"."sightings" AS "Sightings" ON "Sightings"."city_id" = "Cities"."id"
+GROUP BY "State",
+         "City"
+ORDER BY "State" ASC,
+         "City" ASC
+LIMIT 1000;
+
+----
+
+SELECT "Sightings"."shape" AS "Shape",
+       AVG("Sightings"."duration") AS "Average Duration",
+       MAX("Sightings"."duration") AS "Maximum Duration",
+       SUM("Sightings"."duration") AS "Total sum of Duration",
+       STDDEV("Sightings"."duration") AS "Standard Deviation of Duration"
+FROM "public"."sightings" AS "Sightings"
+GROUP BY "Shape"
+ORDER BY "Shape" ASC
+LIMIT 1000;
+
+----
+
+SELECT "Cities"."name" AS "Name",
+       "Cities"."lat" AS "Lat",
+       "Cities"."lon" AS "Lon"
+FROM "public"."cities" AS "Cities"
+GROUP BY "Name",
+         "Lat",
+         "Lon"
+ORDER BY "Name" ASC,
+         "Lat" ASC,
+         "Lon" ASC
+LIMIT 1000;
+
+---- No quotes
+
+SELECT States.name AS State, Counties.name AS County, Sightings.shape AS Shape, COUNT(DISTINCT Sightings.id) AS Count FROM public.states AS States INNER JOIN public.counties AS Counties ON Counties.state_id = States.id INNER JOIN public.cities AS Cities ON Cities.state_id = States.id INNER JOIN public.sightings AS Sightings ON Sightings.city_id = Cities.id GROUP BY State, County, Shape ORDER BY State ASC, County ASC, Shape ASC LIMIT 1000;
+
+----
+
+SELECT States.name AS State, Cities.name AS City, AVG(Sightings.duration) AS Average_Duration FROM public.states AS States INNER JOIN public.cities AS Cities ON Cities.state_id = States.id INNER JOIN public.sightings AS Sightings ON Sightings.city_id = Cities.id GROUP BY State, City ORDER BY State ASC, City ASC LIMIT 1000;
+
+----
+
+SELECT States.name AS State, AVG(Sightings.duration) AS Average_Duration FROM public.states AS States INNER JOIN public.cities AS Cities ON Cities.state_id = States.id INNER JOIN public.sightings AS Sightings ON Sightings.city_id = Cities.id GROUP BY State ORDER BY State ASC LIMIT 1000;
+
+----
+
+SELECT Sightings.shape AS Shape, AVG(Sightings.duration) AS Average_Duration, MAX(Sightings.duration) AS Maximum_Duration, SUM(Sightings.duration) AS Sum_of_Duration, STDDEV(Sightings.duration) AS Standard_Deviation_of_Duration FROM public.sightings AS Sightings GROUP BY Shape ORDER BY Shape ASC LIMIT 1000;
+
+----
+
+SELECT Cities.name AS Name, Cities.lat AS Lat, Cities.lon AS Lon FROM public.cities AS Cities GROUP BY Name, Lat, Lon ORDER BY Name ASC, Lat ASC, Lon ASC LIMIT 1000;
+
+----
