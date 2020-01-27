@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib -y
+# sudo apt-get update
+# sudo apt-get install postgresql postgresql-contrib -y
 sudo -u postgres psql -c "CREATE USER db_user WITH PASSWORD 'db_pass';"
 sudo -u postgres psql -c "CREATE DATABASE sightings;"
 sudo -u postgres psql -c "GRANT USAGE ON SCHEMA public TO db_user;"
