@@ -1,0 +1,74 @@
+init_config:
+instances:
+  - host: localhost
+    port: 5432
+    username: datadog
+    password: password123!
+    dbname: postgres
+    tags:
+      - application:ClickandCollect
+    collect_function_metrics: true
+    collect_count_metrics: true
+    collect_activity_metrics: true
+    collect_database_size_metrics: true
+    collect_default_database: true
+    tag_replication_role: false
+    relations:
+      - relation_regex: '.*'
+    custom_queries:
+      - metric_prefix: postgresql
+        query: SELECT datname, application_name, count(*) AS connection_state FROM pg_stat_activity GROUP BY datname, application_name, state HAVING COUNT(state) > 0;
+        columns:
+          - name: connection_state
+            type: gauge
+          - name: datname
+            type: tag
+          - name: application_name
+            type: tag
+      - metric_prefix: postgresql
+       #Verify the unit should be count(*) or sum for exmaple
+        query: SELECT datname, count(*) AS active_queries WHERE state='active' FROM pg_stat_activity_allusers GROUP BY datname;
+        columns:
+            - name: active_queries
+              type: gauge
+            - name: datname
+              type: tag
+      - metric_prefix: postgresql
+        query: SELECT datname, count(*) AS inactive_queries WHERE state!='active' FROM pg_stat_activity_allusers GROUP BY datname;
+        columns:
+            - name: inactive_queries
+              type: gauge
+            - name: datname
+              type: tag
+#New Database instance 
+  - host: localhost
+    port: 5432
+    username: datadog
+    password: password123!
+    dbname: sightings
+    tags:
+      - application:ClickandCollect
+    collect_function_metrics: true
+    collect_count_metrics: true
+    collect_activity_metrics: true
+    collect_database_size_metrics: true
+    collect_default_database: true
+    tag_replication_role: false
+    relations:
+      - relation_regex: '.*'
+#New Database instance 
+  - host: localhost
+    port: 5432
+    username: datadog
+    password: password123!
+    dbname: operations
+    tags:
+      - application:ClickandCollect
+    collect_function_metrics: true
+    collect_count_metrics: true
+    collect_activity_metrics: true
+    collect_database_size_metrics: true
+    collect_default_database: true
+    tag_replication_role: false
+    relations:
+      - relation_regex: '.*'
