@@ -3,7 +3,7 @@ instances:
   - host: localhost
     port: 5432
     username: datadog
-    password: *****
+    password: password123!
     dbname: postgres
     tags:
       - application:ClickandCollect
@@ -44,9 +44,24 @@ instances:
   - host: localhost
     port: 5432
     username: datadog
-    password: *****
-    #NAME OF PSQL DB THAT YOU WISH TO COLLECT RELATIONS DATA FROM. (i.e unique database name. NOT 'postgres')
+    password: password123!
     dbname: sightings
+    tags:
+      - application:ClickandCollect
+    collect_function_metrics: true
+    collect_count_metrics: true
+    collect_activity_metrics: true
+    collect_database_size_metrics: true
+    collect_default_database: true
+    tag_replication_role: false
+    relations:
+      - relation_regex: '.*'
+#New Database instance 
+  - host: localhost
+    port: 5432
+    username: datadog
+    password: password123!
+    dbname: operations
     tags:
       - application:ClickandCollect
     collect_function_metrics: true
